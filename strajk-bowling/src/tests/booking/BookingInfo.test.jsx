@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { describe, expect, vi } from "vitest";
+import { describe, expect, expectTypeOf, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import BookingInfo from "../../../src/components/BookingInfo/BookingInfo";
 
@@ -31,4 +31,32 @@ describe("Användaren ska kunna välja en tid", () => {
     expect(dateInput.value).toBe("2025-05-04");
     expect(mockUpdate).toHaveBeenCalled();
   });
+
+  // AC: Användaren ska kunna ange antal spelare (minst 1 spelare)
+  test("Användaren skall kunna ange antal spelare", async () => {
+    const mockUpdate = vi.fn();
+
+    render(<BookingInfo updateBookingDetails={mockUpdate} />);
+
+    const playerInput = document.querySelector("input[name='people']");
+
+    await userEvent.type(playerInput, "2");
+
+    expect(playerInput.value).toBe("2");
+    expect(mockUpdate).toHaveBeenCalled();
+  });
+});
+
+//AC: Användaren skall kunna ange antal banor baserat på antal spelare
+test("Användaren kan ange antal banor", async () => {
+  const mockUpdate = vi.fn();
+
+  render(<BookingInfo updateBookingDetails={mockUpdate} />);
+
+  const lanesInput = document.querySelector("input[name='lanes']");
+
+  await userEvent.type(lanesInput, "1"); // bara ett som går att testa då vi inte vet antalet spelare i testet
+
+  expect(lanesInput.value).toBe("1");
+  expect(mockUpdate).toHaveBeenCalled();
 });
