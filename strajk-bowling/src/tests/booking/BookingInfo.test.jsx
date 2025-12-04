@@ -3,6 +3,7 @@ import { describe, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import BookingInfo from "../../../src/components/BookingInfo/BookingInfo";
 
+// AC: Användaren ska kunna välja en tid från tidvalssystemet
 describe("Användaren ska kunna välja en tid", () => {
   test("Användaren kan välja en tid", async () => {
     const mockUpdate = vi.fn();
@@ -17,6 +18,7 @@ describe("Användaren ska kunna välja en tid", () => {
     expect(mockUpdate).toHaveBeenCalled();
   });
 
+  // AC: Användaren ska kunna välja ett datum från datumvalssystemet
   test("Användaren kan välja ett datum", async () => {
     const mockUpdate = vi.fn();
 
