@@ -25,7 +25,11 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd strajk-bowling
+          npm ci
 
       - name: Run tests
-        run: npm test -- --run --coverage
+        run: |
+          cd strajk-bowling
+          npm test -- --run --coverage
