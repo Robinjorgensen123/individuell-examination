@@ -16,4 +16,17 @@ describe("Användaren ska kunna välja en tid", () => {
     expect(timeInput.value).toBe("18:30");
     expect(mockUpdate).toHaveBeenCalled();
   });
+
+  test("Användaren kan välja ett datum", async () => {
+    const mockUpdate = vi.fn();
+
+    render(<BookingInfo updateBookingDetails={mockUpdate} />);
+
+    const dateInput = document.querySelector("input[name='when']");
+
+    await userEvent.type(dateInput, "2025-05-04");
+
+    expect(dateInput.value).toBe("2025-05-04");
+    expect(mockUpdate).toHaveBeenCalled();
+  });
 });
