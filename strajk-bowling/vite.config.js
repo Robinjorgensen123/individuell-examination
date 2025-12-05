@@ -11,7 +11,18 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      reportsDirectory: "coverage",
+      threshold: {
+        lines: 90,
+        branches: 90,
+        functions: 90,
+        statements: 90,
+      },
+      exclude: [
+        "node_modules/",
+        "src/mocks/",
+        "vite.config.js",
+        "src/main.jsx",
+      ],
     },
   },
 });

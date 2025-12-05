@@ -19,7 +19,7 @@ describe("Användaren skall kunna ange skostorlek för varje spelare", () => {
       />
     );
 
-    const shoeSize = screen.getByLabelText("Shoe size / person 1");
+    const shoeSize = screen.getByTestId("shoe-input-1");
 
     await userEvent.type(shoeSize, "42");
 
@@ -35,7 +35,7 @@ describe("Användaren skall kunna ange skostorlek för varje spelare", () => {
         removeShoe={removeShoe}
       />
     );
-    const shoeInput = screen.getByLabelText("Shoe size / person 1");
+    const shoeInput = screen.getByTestId("shoe-input-1");
 
     await userEvent.type(shoeInput, "45");
 

@@ -9,6 +9,7 @@ function Input({
   defaultValue,
   disabled,
   maxLength,
+  ...props
 }) {
   return (
     <section className="input">
@@ -21,6 +22,7 @@ function Input({
         defaultValue={defaultValue ? defaultValue : ""}
         maxLength={maxLength}
         disabled={disabled}
+        {...props} // <-- skickar vidare data-testid
       />
     </section>
   );

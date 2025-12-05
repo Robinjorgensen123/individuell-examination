@@ -15,6 +15,8 @@ function Shoes({ updateSize, addShoe, removeShoe, shoes }) {
           name={input.id}
           handleChange={updateSize}
           maxLength={2}
+          data-testid={`shoe-input-${index + 1}`} // lagt till data-testId eftersom input komponenten saknar id
+          // koppling till labeln och får därför inget tillgänglighetsnamn
         />
         <button
           className="shoes__button shoes__button--small"
