@@ -15,8 +15,13 @@ function Shoes({ updateSize, addShoe, removeShoe, shoes }) {
           name={input.id}
           handleChange={updateSize}
           maxLength={2}
-          data-testid={`shoe-input-${index + 1}`} // lagt till data-testId eftersom input komponenten saknar id
-          // koppling till labeln och får därför inget tillgänglighetsnamn
+          //**********************DATA-TEST ID MOTIVERING****************************************** */
+          // Lägger till data-testid eftersom Input komponenten saknar for/id länkning,
+          // och detta gör då att det inte går att använda sematiskt korrekt metod screen.getByLabelText eller
+          // getByRole då de inte är kopplat till input fältet
+          //**************************************************************************************** */
+          defaultValue={input.size}
+          data-testid={`shoe-input-${index + 1}`}
         />
         <button
           className="shoes__button shoes__button--small"
