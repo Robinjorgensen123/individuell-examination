@@ -124,4 +124,37 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
+
+  test("VG: visar felmeddelande 'Det får max vara 4 spelare per bana'", async () => {
+    render(
+      <BrowserRouter>
+        <Booking />
+      </BrowserRouter>
+    );
+    const { dateInput, timeInput, peopleInput, lanesInput } = getInputs();
+    const submitButton = await screen.findByRole("button", {
+      name: /strIIIIIike!/i,
+    });
+    const addShoeButton = screen.getByRole("button", { name: "+" });
+
+    await userEvent.type(dateInput, "2026-06-06");
+    await userEvent.type(timeInput, "18:00");
+    await userEvent.type(peopleInput, "5");
+    await userEvent.type(lanesInput, "1");
+
+    for (let i = 0; i < 5; i++) {
+      await userEvent.click(addShoeButton);
+    }
+    const shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+
+    for (const input of shoeInputs) {
+      await userEvent.type(input, "42");
+    }
+    await userEvent.click(submitButton);
+
+    expect(
+      await screen.findByText(/Det får max vara 4 spelare per bana/i)
+    ).toBeInTheDocument();
+    expect(mockedNavigate).not.toHaveBeenCalled();
+  });
 });
