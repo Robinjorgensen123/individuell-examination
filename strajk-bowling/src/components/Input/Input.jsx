@@ -9,20 +9,24 @@ function Input({
   defaultValue,
   disabled,
   maxLength,
+  id,
   ...props
 }) {
   return (
     <section className="input">
-      <label className="input__label">{label}</label>
+      <label className="input__label" htmlFor={id}>
+        {label}
+      </label>
       <input
         type={type}
+        id={id}
         className={`input__field ${customClass ? customClass : ""}`}
         name={name}
         onChange={handleChange}
         defaultValue={defaultValue ? defaultValue : ""}
         maxLength={maxLength}
         disabled={disabled}
-        {...props} // <-- skickar vidare data-testid
+        {...props}
       />
     </section>
   );
