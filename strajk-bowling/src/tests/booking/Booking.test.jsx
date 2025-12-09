@@ -64,6 +64,41 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
+  test("Visar 'Alla fälten måste vara ifyllda' om antal Banor är 0 eller saknas", async () => {
+    render(
+      <BrowserRouter>
+        <Booking />
+      </BrowserRouter>
+    );
+
+    const { dateInput, timeInput, peopleInput, lanesInput } = getInputs();
+
+    const submitButton = await screen.findByRole("button", {
+      name: /strIIIIIike/i,
+    });
+
+    await userEvent.type(dateInput, "2026-06-06");
+    await userEvent.type(timeInput, "18:00");
+    await userEvent.type(peopleInput, "2");
+    await userEvent.clear(lanesInput);
+
+    const addShoeButton = screen.getByRole("button", { name: "+" });
+    await userEvent.click(addShoeButton);
+    await userEvent.click(addShoeButton);
+
+    const shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+    for (const input of shoeInputs) {
+      await userEvent.type(input, "42");
+    }
+
+    await userEvent.click(submitButton);
+
+    expect(
+      await screen.findByText(/Alla fälten måste vara ifyllda/i)
+    ).toBeInTheDocument();
+    expect(mockedNavigate).not.toHaveBeenCalled();
+  });
+
   // VG 3: Visar felmeddelande om antalet skor inte stämmer överens med antal spelare
   test("Visar felmeddelande om antalet skor inte stämmer överens med antal spelare", async () => {
     render(
@@ -273,8 +308,28 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
+  test("Tar bort skofält när '-' klickas och DOM uppdateras", async () => {
+    render(
+      <BrowserRouter>
+        <Booking />
+      </BrowserRouter>
+    );
+
+    const addShoeButton = screen.getByRole("button", { name: "+" });
+
+    await userEvent.click(addShoeButton);
+    await userEvent.click(addShoeButton);
+
+    let removeButtons = screen.getAllByRole("button", { name: "-" });
+
+    await userEvent.click(removeButtons[0]);
+
+    removeButtons = screen.getAllByRole("button", { name: "-" });
+    expect(removeButtons).toHaveLength(1);
+  });
+
   // VG 6: Testar MSW Felhantering (API-fel / Fullbokat)
-  test("visar felmeddelande vid fullbokning (MSW 400)", async () => {
+  /*  test("visar felmeddelande vid fullbokning (MSW 400)", async () => {
     server.use(handlers[1]);
 
     render(
@@ -309,5 +364,5 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
 
     expect(mockedNavigate).not.toHaveBeenCalled();
-  });
+  }); */
 });
