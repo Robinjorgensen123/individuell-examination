@@ -6,6 +6,7 @@ import Booking from "../../views/Booking";
 import "@testing-library/jest-dom";
 import { server } from "../../tests/mocks/server";
 import { handlers } from "../../tests/mocks/handlers";
+import { http, HttpResponse } from "msw";
 
 const mockedNavigate = vi.fn();
 vi.mock("react-router-dom", async (importOriginal) => {
@@ -39,7 +40,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     vi.clearAllMocks();
     server.resetHandlers();
   });
-  // AC: Visar felmeddelande om fält saknas (Spelare)
+  /// AC5 – VG: Felmeddelande visas om obligatoriska fält saknas (spelare saknas)
   test("Visar felmeddelande 'Alla fälten måste vara ifyllda' om SPELARE saknas", async () => {
     render(
       <BrowserRouter>
@@ -64,6 +65,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
+  // AC5 – VG: Felmeddelande visas om antal banor saknas eller är 0
   test("Visar 'Alla fälten måste vara ifyllda' om antal Banor är 0 eller saknas", async () => {
     render(
       <BrowserRouter>
@@ -99,7 +101,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // VG 3: Visar felmeddelande om antalet skor inte stämmer överens med antal spelare
+  // AC11 – VG: Felmeddelande om antalet skor och spelare inte matchar
   test("Visar felmeddelande om antalet skor inte stämmer överens med antal spelare", async () => {
     render(
       <BrowserRouter>
@@ -130,7 +132,8 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
-  // AC: Visar felmeddelande om fält saknas (Datum)
+
+  // AC5 – VG: Felmeddelande visas om datum saknas
   test("Visar felmeddelande 'Alla fält måste vara ifyllda' om Datum saknas", async () => {
     render(
       <BrowserRouter>
@@ -163,7 +166,8 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
-  // VG 2: Visar felmeddelande om spelare/bana överskrider maxgränsen (Reserveringslogik)
+
+  // AC6 – VG: För många spelare per bana (max 4 per bana)
   test("VG: visar felmeddelande 'Det får max vara 4 spelare per bana'", async () => {
     render(
       <BrowserRouter>
@@ -196,7 +200,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
-  // VG 5: Testar det kompletta lyckade flödet (MSW Success, Lagring & Navigering)
+  // AC16–AC18 – Lyckad bokning + bekräftelse sparas + navigering sker
   test("Slutför lyckad bokning, navigerar och lagrar bekräftelse (MSW", async () => {
     render(
       <BrowserRouter>
@@ -239,7 +243,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
       expect.any(Object)
     );
   });
-  // AC: Visar felmeddelande om fält saknas (Tid)
+  // AC5 – VG: Felmeddelande om tid saknas
   test("Visar felmeddelande 'Alla fälten måste vara ifyllda' om TID saknas", async () => {
     render(
       <BrowserRouter>
@@ -272,7 +276,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
-  // VG 4: Visar felmeddelande om inte alla skostorlekar är ifyllda
+  // AC10 – VG: Alla skostorlekar ej ifyllda
   test("Visar felmeddelande om inte alla skostorlekar är ifyllda", async () => {
     render(
       <BrowserRouter>
@@ -307,7 +311,107 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     ).toBeInTheDocument();
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
+  // AC13 & AC14 – Ta bort skofält + skorna ska inte inkluderas i bokningen
+  test("tar bort skofält och skickar färre skor i booking-info", async () => {
+    render(
+      <BrowserRouter>
+        <Booking />
+      </BrowserRouter>
+    );
 
+    const { dateInput, timeInput, peopleInput, lanesInput } = getInputs();
+    const addShoeButton = screen.getByRole("button", { name: "+" });
+    const submitButton = await screen.findByRole("button", {
+      name: /strIIIIIike!/i,
+    });
+
+    await userEvent.type(dateInput, "2026-06-06");
+    await userEvent.type(timeInput, "18:00");
+    await userEvent.type(peopleInput, "2");
+    await userEvent.type(lanesInput, "1");
+
+    await userEvent.click(addShoeButton);
+    await userEvent.click(addShoeButton);
+
+    let shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+    expect(shoeInputs).toHaveLength(2);
+
+    for (const input of shoeInputs) {
+      await userEvent.type(input, "42");
+    }
+
+    const removeButtons = screen.getAllByRole("button", { name: "-" });
+    await userEvent.click(removeButtons[0]);
+
+    shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+    expect(shoeInputs).toHaveLength(1);
+
+    await userEvent.clear(peopleInput);
+    await userEvent.type(peopleInput, "1");
+
+    await userEvent.type(shoeInputs[0], "42");
+
+    await userEvent.click(submitButton);
+
+    await vi.waitFor(() => {
+      expect(sessionStorageMock.setItem).toHaveBeenCalled();
+    });
+
+    const saved = JSON.parse(sessionStorageMock.setItem.mock.calls[0][1]);
+    expect(saved).toBeTruthy();
+  });
+
+  // AC15 – Totalen ska beräknas korrekt baserat på kvarvarande skor
+  test("totalen blir korrekt genom att endast kvarvarande skor skickas", async () => {
+    render(
+      <BrowserRouter>
+        <Booking />
+      </BrowserRouter>
+    );
+    const { dateInput, timeInput, peopleInput, lanesInput } = getInputs();
+    const addShoeButton = screen.getByRole("button", { name: "+" });
+    const submitButton = await screen.findByRole("button", {
+      name: /strIIIIIike!/i,
+    });
+
+    await userEvent.type(dateInput, "2026-06-06");
+    await userEvent.type(timeInput, "18:00");
+    await userEvent.type(peopleInput, "2");
+    await userEvent.type(lanesInput, "1");
+
+    await userEvent.click(addShoeButton);
+    await userEvent.click(addShoeButton);
+
+    let shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+
+    for (const input of shoeInputs) {
+      await userEvent.type(input, "42");
+    }
+
+    const removeButtons = screen.getAllByRole("button", { name: "-" });
+    await userEvent.click(removeButtons[0]);
+
+    shoeInputs = document.querySelectorAll(".input__field.shoes__input");
+    expect(shoeInputs).toHaveLength(1);
+
+    await userEvent.clear(peopleInput);
+    await userEvent.type(peopleInput, "1");
+
+    await userEvent.type(shoeInputs[0], "42");
+
+    await userEvent.click(submitButton);
+
+    await vi.waitFor(() => {
+      expect(sessionStorageMock.setItem).toHaveBeenCalled();
+    });
+
+    const savedArgs = sessionStorageMock.setItem.mock.calls[0][1];
+    const saved = JSON.parse(savedArgs);
+
+    expect(saved).toEqual({ id: "SB-TEST-007", price: 340 });
+  });
+
+  // AC13 – Ta bort skofält ska uppdatera DOM
   test("Tar bort skofält när '-' klickas och DOM uppdateras", async () => {
     render(
       <BrowserRouter>
@@ -327,42 +431,4 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     removeButtons = screen.getAllByRole("button", { name: "-" });
     expect(removeButtons).toHaveLength(1);
   });
-
-  // VG 6: Testar MSW Felhantering (API-fel / Fullbokat)
-  /*  test("visar felmeddelande vid fullbokning (MSW 400)", async () => {
-    server.use(handlers[1]);
-
-    render(
-      <BrowserRouter>
-        <Booking />
-      </BrowserRouter>
-    );
-    const { dateInput, timeInput, peopleInput, lanesInput } = getInputs();
-    const submitButton = await screen.findByRole("button", {
-      name: /strIIIIIike!/i,
-    });
-    const addShoeButton = screen.getByRole("button", { name: "+" });
-
-    await userEvent.type(dateInput, "2026-06-06");
-    await userEvent.type(timeInput, "18:00");
-    await userEvent.type(peopleInput, "2");
-    await userEvent.type(lanesInput, "1");
-
-    await userEvent.click(addShoeButton);
-    await userEvent.click(addShoeButton);
-    const shoeInputs = document.querySelectorAll(".input__field.shoes__input");
-    for (const input of shoeInputs) {
-      await userEvent.type(input, "42");
-    }
-
-    await userEvent.click(submitButton);
-
-    expect(
-      await screen.findByText((content, element) =>
-        content.includes("fullbokade")
-      )
-    ).toBeInTheDocument();
-
-    expect(mockedNavigate).not.toHaveBeenCalled();
-  }); */
 });

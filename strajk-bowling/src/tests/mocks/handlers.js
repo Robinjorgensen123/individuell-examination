@@ -4,7 +4,7 @@ const API_URL =
   "https://731xy9c2ak.execute-api.eu-north-1.amazonaws.com/booking";
 
 export const handlers = [
-  http.post(API_URL, async ({ request }) => {
+  http.post(API_URL, async () => {
     return HttpResponse.json(
       {
         bookingDetails: {
@@ -13,15 +13,6 @@ export const handlers = [
         },
       },
       { status: 201 }
-    );
-  }),
-
-  http.post(API_URL, async ({ request }) => {
-    return HttpResponse.json(
-      {
-        error: "Banorna är tyvärr fullbokade. Välj en annan tid.",
-      },
-      { status: 400 }
     );
   }),
 ];

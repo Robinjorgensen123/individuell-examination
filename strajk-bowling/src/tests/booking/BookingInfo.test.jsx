@@ -9,7 +9,7 @@ import Booking from "../../views/Booking";
 const mockUpdate = vi.fn();
 
 describe("TEST: Time Input", () => {
-  // AC: Användaren ska kunna välja en tid från ett kalender- och tidvalssystem.
+  // AC2 – Användaren ska kunna välja en tid från kalender- och tidvalssystemet
   test("Användaren kan välja en tid och updateBookingDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
@@ -22,9 +22,8 @@ describe("TEST: Time Input", () => {
   });
 });
 
-// AC: Användaren ska kunna välja ett datum från datumvalssystemet
 describe("Test: Date Input", () => {
-  // AC: Användaren ska kunna välja ett datum från ett kalender- och tidvalssystem.
+  // AC1 – Användaren ska kunna välja ett datum från ett kalender- och tidvalssystem
   test("Användaren kan välja ett datum och updateBookingDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
@@ -38,7 +37,7 @@ describe("Test: Date Input", () => {
 });
 
 describe("TEST: players Input", () => {
-  // AC: Användaren ska kunna ange antal spelare (minst 1 spelare)
+  // AC3 – Användaren ska kunna ange antal spelare (minst 1)
   test("Användaren kan ange antal spelare och updateBookingDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
@@ -52,7 +51,7 @@ describe("TEST: players Input", () => {
 });
 
 describe("Test: Lanes Input", () => {
-  // AC: Användaren ska kunna reservera ett eller flera banor beroende på antal spelare.
+  // AC4 – Användaren ska kunna reservera ett eller flera banor beroende på antal spelare
   test("Användaren kan ange antal banor och updateBookngDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 

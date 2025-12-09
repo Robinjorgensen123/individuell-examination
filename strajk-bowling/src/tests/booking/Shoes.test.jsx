@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 import Shoes from "../../components/Shoes/Shoes";
 import userEvent from "@testing-library/user-event";
+import { vi } from "vitest";
 
 const addShoe = vi.fn();
 const updateSize = vi.fn();
@@ -24,7 +25,7 @@ describe("Unit Tests: Shoes Component(Skostorlekar)", () => {
     addShoe.mockClear();
     removeShoe.mockClear();
   });
-  // AC: ”Användaren ska kunna ange skostorlek för varje spelare.”
+  // AC5 – Användaren ska kunna ange skostorlek för varje spelare
   test("Användaren kan ange skostorlek och updateSize anropas", async () => {
     render(
       <Shoes
@@ -43,7 +44,7 @@ describe("Unit Tests: Shoes Component(Skostorlekar)", () => {
     expect(updateSize).toHaveBeenCalled();
   });
 
-  // AC: ”Användaren ska kunna ändra skostorlek för varje spelare.”
+  // AC6 – Användaren ska kunna ändra skostorlek för varje spelare
   test("Användaren ska kunna ändra skostorlek", async () => {
     const initialShoe = [{ id: "p1", size: "45" }];
     render(
@@ -63,7 +64,7 @@ describe("Unit Tests: Shoes Component(Skostorlekar)", () => {
     expect(updateSize).toHaveBeenCalledTimes(3);
   });
 
-  // AC: Användaren ska kunna ta bort ett tidigare valt fält för skostorlek, genom att klicka på en "-"-knapp vid varje spelare.
+  // AC11 – Användaren ska kunna ta bort ett skostorleksfält via "-" knappen
   test("'-' knappen ska anropa 'removeShoe' med korrekt spelar-ID", async () => {
     render(
       <Shoes
@@ -80,7 +81,7 @@ describe("Unit Tests: Shoes Component(Skostorlekar)", () => {
 
     expect(removeShoe).toHaveBeenCalledWith("p1");
   });
-  //omfattar AC: Användaren ska kunna lägga till ett nytt skostorleksfält
+  // AC7 – Det ska vara möjligt att lägga till skostorleksfält för alla spelare
   test("'+' knappen ska anropa 'addShoe' för att lägga till ett nytt fält", async () => {
     render(
       <Shoes
@@ -99,7 +100,7 @@ describe("Unit Tests: Shoes Component(Skostorlekar)", () => {
     expect(addShoe).toHaveBeenCalledWith(expect.any(String));
   });
 
-  // AC: Systemet ska visa en översikt där användaren kan kontrollera de valda skostorlekarna för varje spelare innan bokningen slutförs.
+  // AC10 – Systemet ska visa översikt över alla skostorlekar innan bokning slutförs
   test("Renderar ett fält för varje spelare och visar översiktliga värden", () => {
     render(
       <Shoes
