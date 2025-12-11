@@ -294,7 +294,8 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
   });
 });
 
-// AC13: När användaren tar bort skostorleken för en spelare ska systemet uppdatera bokningen så att inga skor längre är bokade för den spelaren.
+// AC13 & AC14: När en spelare tas bort via "-" ska bokningen uppdateras
+// så att den spelaren inte längre räknas med (färre skor skickas i booking-info).
 test("tar bort skofält och skickar färre skor i booking-info", async () => {
   render(
     <BrowserRouter>
@@ -343,8 +344,9 @@ test("tar bort skofält och skickar färre skor i booking-info", async () => {
   const saved = JSON.parse(sessionStorageMock.setItem.mock.calls[0][1]);
   expect(saved).toBeTruthy();
 });
-// detta testet är fel
-// AC14: Om användaren tar bort skostorleken ska systemet inte inkludera den spelaren i skorantalet och priset för skor i den totala bokningssumman.
+
+// AC15: När en spelare tas bort ska den totala bokningssumman beräknas
+// utifrån de kvarvarande spelarna och banorna (rätt total i bekräftelsen).
 test("totalen blir korrekt genom att endast kvarvarande skor skickas", async () => {
   render(
     <BrowserRouter>
@@ -394,7 +396,7 @@ test("totalen blir korrekt genom att endast kvarvarande skor skickas", async () 
   expect(saved).toEqual({ id: "SB-TEST-007", price: 340 });
 });
 
-// AC15, AC16, AC19: Slutför bokning, får nummer/pris, navigerar till bekräftelsesidan.
+// AC16-AC19: Slutför bokning, får nummer/pris, navigerar till bekräftelsesidan.
 test("Slutför lyckad bokning, navigerar och lagrar bekräftelse (MSW", async () => {
   render(
     <BrowserRouter>
