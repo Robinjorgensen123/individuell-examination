@@ -27,7 +27,7 @@ describe("Unit Tests: Shoes Component (Skostorlekar)", () => {
     removeShoe.mockClear();
   });
 
-  // AC5
+  // AC6: Användaren ska kunna ange skostorlek för varje spelare.
   test("Användaren kan ange skostorlek och updateSize anropas", async () => {
     render(
       <Shoes
@@ -43,7 +43,7 @@ describe("Unit Tests: Shoes Component (Skostorlekar)", () => {
     expect(updateSize).toHaveBeenCalled();
   });
 
-  // AC6
+  // AC7: Användaren ska kunna ändra skostorlek för varje spelare.
   test("Användaren ska kunna ändra skostorlek", async () => {
     render(
       <Shoes
@@ -60,7 +60,7 @@ describe("Unit Tests: Shoes Component (Skostorlekar)", () => {
     expect(updateSize).toHaveBeenCalledTimes(3);
   });
 
-  // AC7
+  // AC8: Det ska vara möjligt att välja skostorlek för alla spelare som ingår i bokningen.
   test("'+' knappen ska anropa addShoe", async () => {
     render(
       <Shoes
@@ -76,7 +76,7 @@ describe("Unit Tests: Shoes Component (Skostorlekar)", () => {
     expect(addShoe).toHaveBeenCalledWith(expect.any(String));
   });
 
-  // AC10
+  // AC11: Systemet ska visa en översikt där användaren kan kontrollera de valda skostorlekarna för varje spelare innan bokningen slutförs.
   test("Renderar ett fält för varje spelare och visar värden", () => {
     render(
       <Shoes
@@ -91,7 +91,7 @@ describe("Unit Tests: Shoes Component (Skostorlekar)", () => {
     expect(screen.getByLabelText(/Shoe size \/ person 4/i).value).toBe("45");
   });
 
-  // AC11
+  // AC12: Användaren ska kunna ta bort ett tidigare valt fält för skostorlek genom att klicka på en "-"-knapp vid varje spelare.
   test("'-' knappen ska anropa removeShoe med korrekt ID", async () => {
     render(
       <Shoes

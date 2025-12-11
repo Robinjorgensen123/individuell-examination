@@ -41,7 +41,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     server.resetHandlers();
   });
 
-  /// AC5 – VG: Felmeddelande visas om obligatoriska fält saknas (spelare saknas)
+  /// AC4: VG - Ifall användaren inte fyller i något av ovanstående så ska ett felmeddelande visas.
   test("Visar felmeddelande 'Alla fälten måste vara ifyllda' om SPELARE saknas", async () => {
     render(
       <BrowserRouter>
@@ -66,7 +66,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC5 – VG: Felmeddelande visas om antal banor saknas eller är 0
+  /// AC4: VG - Ifall användaren inte fyller i något av ovanstående så ska ett felmeddelande visas.
   test("Visar 'Alla fälten måste vara ifyllda' om antal Banor är 0 eller saknas", async () => {
     render(
       <BrowserRouter>
@@ -102,7 +102,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC5 – VG: Felmeddelande visas om datum saknas
+  /// AC4: VG - Ifall användaren inte fyller i något av ovanstående så ska ett felmeddelande visas.
   test("Visar felmeddelande 'Alla fält måste vara ifyllda' om Datum saknas", async () => {
     render(
       <BrowserRouter>
@@ -136,7 +136,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC5 – VG: Felmeddelande om tid saknas
+  /// AC4: VG - Ifall användaren inte fyller i något av ovanstående så ska ett felmeddelande visas.
   test("Visar felmeddelande 'Alla fälten måste vara ifyllda' om TID saknas", async () => {
     render(
       <BrowserRouter>
@@ -170,7 +170,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC6 – VG: För många spelare per bana (max 4 per bana)
+  // AC5: VG - Om det inte finns tillräckligt med lediga banor för det angivna antalet spelare, ska användaren få ett felmeddelande.
   test("VG: visar felmeddelande 'Det får max vara 4 spelare per bana'", async () => {
     render(
       <BrowserRouter>
@@ -204,7 +204,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC10 – VG: Alla skostorlekar ej ifyllda
+  // AC9: VG - Om användaren försöker slutföra bokningen utan att ange skostorlek för en spelare som har valt att boka skor, ska systemet visa ett felmeddelande.
   test("Visar felmeddelande om inte alla skostorlekar är ifyllda", async () => {
     render(
       <BrowserRouter>
@@ -240,7 +240,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC11 – VG: Felmeddelande om antalet skor och spelare inte matchar
+  // AC10: VG - Om antalet personer och skor inte matchas ska ett felmeddelande visas.
   test("Visar felmeddelande om antalet skor inte stämmer överens med antal spelare", async () => {
     render(
       <BrowserRouter>
@@ -272,7 +272,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  // AC13 – Ta bort skofält ska uppdatera DOM
+  // AC12: Användaren ska kunna ta bort ett tidigare valt fält för skostorlek genom att klicka på en "-"-knapp vid varje spelare.
   test("Tar bort skofält när '-' klickas och DOM uppdateras", async () => {
     render(
       <BrowserRouter>
@@ -294,7 +294,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
   });
 });
 
-// AC13 & AC14 – Ta bort skofält + skorna ska inte inkluderas i bokningen
+// AC13: När användaren tar bort skostorleken för en spelare ska systemet uppdatera bokningen så att inga skor längre är bokade för den spelaren.
 test("tar bort skofält och skickar färre skor i booking-info", async () => {
   render(
     <BrowserRouter>
@@ -343,8 +343,8 @@ test("tar bort skofält och skickar färre skor i booking-info", async () => {
   const saved = JSON.parse(sessionStorageMock.setItem.mock.calls[0][1]);
   expect(saved).toBeTruthy();
 });
-
-// AC15 – Totalen ska beräknas korrekt baserat på kvarvarande skor
+// detta testet är fel
+// AC14: Om användaren tar bort skostorleken ska systemet inte inkludera den spelaren i skorantalet och priset för skor i den totala bokningssumman.
 test("totalen blir korrekt genom att endast kvarvarande skor skickas", async () => {
   render(
     <BrowserRouter>
@@ -394,7 +394,7 @@ test("totalen blir korrekt genom att endast kvarvarande skor skickas", async () 
   expect(saved).toEqual({ id: "SB-TEST-007", price: 340 });
 });
 
-// AC16–AC18 – Lyckad bokning + bekräftelse sparas + navigering sker
+// AC15, AC16, AC19: Slutför bokning, får nummer/pris, navigerar till bekräftelsesidan.
 test("Slutför lyckad bokning, navigerar och lagrar bekräftelse (MSW", async () => {
   render(
     <BrowserRouter>

@@ -23,7 +23,7 @@ describe("Test: Date Input", () => {
 });
 
 describe("TEST: Time Input", () => {
-  // AC2 – Användaren ska kunna välja en tid från kalender- och tidvalssystemet
+  // AC1: Användaren ska kunna välja ett datum och en tid från ett kalender- och tidvalssystem.
   test("Användaren kan välja en tid och updateBookingDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
@@ -37,7 +37,7 @@ describe("TEST: Time Input", () => {
 });
 
 describe("TEST: players Input", () => {
-  // AC3 – Användaren ska kunna ange antal spelare (minst 1)
+  //AC2: Användaren ska kunna ange antal spelare (minst 1 spelare).
   test("Användaren kan ange antal spelare och updateBookingDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
@@ -51,7 +51,7 @@ describe("TEST: players Input", () => {
 });
 
 describe("Test: Lanes Input", () => {
-  // AC4 – Användaren ska kunna reservera ett eller flera banor beroende på antal spelare
+  // AC3: Användaren ska kunna reservera ett eller flera banor beroende på antal spelare.
   test("Användaren kan ange antal banor och updateBookngDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
