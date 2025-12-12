@@ -116,6 +116,7 @@ describe("Integration Tests: Booking Flow (VG Requirement", () => {
     await userEvent.type(timeInput, "18:00");
     await userEvent.type(peopleInput, "2");
     await userEvent.type(lanesInput, "1");
+    await userEvent.clear(dateInput);
 
     await userEvent.click(addShoeButton);
     await userEvent.click(addShoeButton);

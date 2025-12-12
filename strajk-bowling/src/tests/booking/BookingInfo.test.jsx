@@ -48,7 +48,7 @@ describe("TEST: players Input", () => {
 });
 
 describe("Test: Lanes Input", () => {
-  // AC3: Användaren ska kunna reservera ett eller flera banor beroende på antal spelare.
+  // AC4: Användaren ska kunna reservera ett eller flera banor beroende på antal spelare.
   test("Användaren kan ange antal banor och updateBookngDetails anropas korrekt", async () => {
     render(<BookingInfo updateBookingDetails={mockUpdate} />);
 
