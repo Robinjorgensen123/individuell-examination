@@ -1,10 +1,7 @@
 import userEvent from "@testing-library/user-event";
-import { describe, expect, expectTypeOf, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import BookingInfo from "../../../src/components/BookingInfo/BookingInfo";
-import { handlers } from "../mocks/handlers";
-import { BrowserRouter } from "react-router-dom";
-import Booking from "../../views/Booking";
 
 const mockUpdate = vi.fn();
 

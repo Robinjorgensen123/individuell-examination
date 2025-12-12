@@ -1,12 +1,10 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter, json } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { describe, expect, test, vi, afterEach } from "vitest";
 import Booking from "../../views/Booking";
 import "@testing-library/jest-dom";
 import { server } from "../../tests/mocks/server";
-import { handlers } from "../../tests/mocks/handlers";
-import { http, HttpResponse } from "msw";
 
 const mockedNavigate = vi.fn();
 vi.mock("react-router-dom", async (importOriginal) => {
